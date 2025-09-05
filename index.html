@@ -1,0 +1,21 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <title>Sidebar Example</title>
+  <script src="sidebar.js" defer></script>
+  <script src="https://cdn.tailwindcss.com"></script>
+</head>
+<body class="bg-gray-100 flex items-center justify-center h-screen">
+  <button id="open-sidebar" class="px-4 py-2 bg-blue-600 text-white rounded">Open Sidebar</button>
+
+  <!-- Overlay -->
+  <div id="overlay" class="fixed inset-0 bg-black/50 hidden opacity-0 transition-opacity"></div>
+
+  <!-- Sidebar -->
+  <aside id="sidebar" class="fixed top-0 right-0 w-80 h-full bg-white shadow-lg transform translate-x-full transition-transform">
+    <button id="close-sidebar" class="p-2 text-red-500">Close X</button>
+    <div class="p-4">Your sidebar content goes here.</div>
+  </aside>
+</body>
+</html>
