@@ -2,20 +2,71 @@
 <html lang="en">
 <head>
   <meta charset="UTF-8">
-  <title>Sidebar Example</title>
+  <title>Sidebar Cart Example</title>
   <script src="sidebar.js" defer></script>
   <script src="https://cdn.tailwindcss.com"></script>
 </head>
-<body class="bg-gray-100 flex items-center justify-center h-screen">
-  <button id="open-sidebar" class="px-4 py-2 bg-blue-600 text-white rounded">Open Sidebar</button>
+<body class="bg-gray-100 min-h-screen">
+
+  <!-- Header with Cart Icon -->
+  <header class="flex justify-between items-center p-4 bg-white shadow">
+    <h1 class="text-xl font-bold">Mini Shop</h1>
+    <button id="open-sidebar" class="relative text-2xl">
+      🛒
+      <span id="cart-count" class="absolute -top-2 -right-2 bg-red-600 text-white text-xs px-2 rounded-full hidden">0</span>
+    </button>
+  </header>
+
+  <!-- Product Grid -->
+  <main class="p-6 grid grid-cols-1 md:grid-cols-3 gap-6">
+    <div class="bg-white p-4 rounded shadow flex flex-col items-center">
+      <h2 class="font-semibold">Item 1</h2>
+      <p class="text-gray-600">10.00€</p>
+      <button class="add-to-cart mt-2 bg-blue-600 text-white px-3 py-1 rounded hover:bg-blue-700 transition" data-name="Item 1" data-price="10">
+        Add to Cart
+      </button>
+    </div>
+    <div class="bg-white p-4 rounded shadow flex flex-col items-center">
+      <h2 class="font-semibold">Item 2</h2>
+      <p class="text-gray-600">20.00€</p>
+      <button class="add-to-cart mt-2 bg-blue-600 text-white px-3 py-1 rounded hover:bg-blue-700 transition" data-name="Item 2" data-price="20">
+        Add to Cart
+      </button>
+    </div>
+    <div class="bg-white p-4 rounded shadow flex flex-col items-center">
+      <h2 class="font-semibold">Item 3</h2>
+      <p class="text-gray-600">15.00€</p>
+      <button class="add-to-cart mt-2 bg-blue-600 text-white px-3 py-1 rounded hover:bg-blue-700 transition" data-name="Item 3" data-price="15">
+        Add to Cart
+      </button>
+    </div>
+  </main>
 
   <!-- Overlay -->
   <div id="overlay" class="fixed inset-0 bg-black/50 hidden opacity-0 transition-opacity"></div>
 
-  <!-- Sidebar -->
-  <aside id="sidebar" class="fixed top-0 right-0 w-80 h-full bg-white shadow-lg transform translate-x-full transition-transform">
-    <button id="close-sidebar" class="p-2 text-red-500">Close X</button>
-    <div class="p-4">Your sidebar content goes here.</div>
+  <!-- Sidebar Cart -->
+  <aside id="sidebar" class="fixed top-0 right-0 w-80 h-full bg-white shadow-lg transform translate-x-full transition-transform flex flex-col">
+    
+    <!-- Header -->
+    <div class="flex items-center justify-between p-4 border-b">
+      <h2 class="text-lg font-semibold text-gray-800">🛒 Your Cart</h2>
+      <button id="close-sidebar" class="text-gray-500 hover:text-red-500">X</button>
+    </div>
+
+    <!-- Cart Items -->
+    <div id="cart-items" class="flex-1 p-4 space-y-3 overflow-y-auto"></div>
+
+    <!-- Footer -->
+    <div class="p-4 border-t space-y-3">
+      <div class="flex justify-between font-semibold text-gray-800">
+        <span>Total</span>
+        <span id="cart-total">0.00€</span>
+      </div>
+      <button class="w-full bg-blue-600 text-white py-2 rounded hover:bg-blue-700 transition">
+        Checkout
+      </button>
+    </div>
   </aside>
 </body>
 </html>

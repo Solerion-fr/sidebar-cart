@@ -2,7 +2,14 @@ const openBtn = document.getElementById("open-sidebar");
 const closeBtn = document.getElementById("close-sidebar");
 const sidebar = document.getElementById("sidebar");
 const overlay = document.getElementById("overlay");
+const cartItemsContainer = document.getElementById("cart-items");
+const cartTotal = document.getElementById("cart-total");
+const cartCount = document.getElementById("cart-count");
 
+// Load cart from localStorage or start empty
+let cart = JSON.parse(localStorage.getItem("cart")) || [];
+
+// Sidebar open/close
 function openSidebar() {
   sidebar.classList.remove("translate-x-full");
   overlay.classList.remove("hidden");
@@ -25,7 +32,98 @@ function closeSidebar() {
   );
 }
 
-
 openBtn.addEventListener("click", openSidebar);
 closeBtn.addEventListener("click", closeSidebar);
 overlay.addEventListener("click", closeSidebar);
+
+// Simulate fetch to add item
+function addToCart(name, price) {
+  return new Promise((resolve) => {
+    setTimeout(() => {
+      const existing = cart.find((item) => item.name === name);
+      if (existing) {
+        existing.quantity += 1;
+      } else {
+        cart.push({ name, price, quantity: 1 });
+      }
+      saveCart();
+      resolve();
+    }, 150); // simulate network delay
+  });
+}
+
+// Save cart to localStorage
+function saveCart() {
+  localStorage.setItem("cart", JSON.stringify(cart));
+}
+
+// Update quantities directly
+function updateQuantity(index, value) {
+  const qty = parseInt(value, 10);
+  if (isNaN(qty) || qty <= 0) {
+    cart.splice(index, 1);
+  } else {
+    cart[index].quantity = qty;
+  }
+  saveCart();
+  renderCart();
+}
+
+// Render cart items
+function renderCart() {
+  cartItemsContainer.innerHTML = "";
+
+  cart.forEach((item, index) => {
+    const div = document.createElement("div");
+    div.className = "flex justify-between items-center border-b pb-2";
+
+    div.innerHTML = `
+      <div>
+        <p class="font-medium text-gray-700">${item.name}</p>
+        <p class="text-sm text-gray-500">${item.price.toFixed(2)}€ each</p>
+      </div>
+      <div class="flex items-center space-x-2">
+        <input type="number" min="1" value="${item.quantity}" 
+               class="w-12 text-center border rounded" data-index="${index}">
+        <span class="ml-2 font-semibold">${(item.price * item.quantity).toFixed(2)}€</span>
+      </div>
+    `;
+
+    cartItemsContainer.appendChild(div);
+  });
+
+  // Update total
+  const total = cart.reduce((sum, item) => sum + item.price * item.quantity, 0);
+  cartTotal.textContent = `${total.toFixed(2)}€`;
+
+  // Update count badge
+  const totalItems = cart.reduce((sum, item) => sum + item.quantity, 0);
+  cartCount.textContent = totalItems;
+  cartCount.classList.toggle("hidden", totalItems === 0);
+
+  // Input listeners
+  document.querySelectorAll("input[data-index]").forEach((input) => {
+    input.addEventListener("change", () => {
+      const index = parseInt(input.dataset.index, 10);
+      updateQuantity(index, input.value);
+    });
+  });
+}
+
+// Add-to-cart buttons
+document.querySelectorAll(".add-to-cart").forEach((btn) => {
+  btn.addEventListener("click", async () => {
+    const name = btn.dataset.name;
+    const price = parseFloat(btn.dataset.price);
+
+    await addToCart(name, price);
+    renderCart();
+
+    // Animate badge
+    cartCount.classList.add("animate-bounce");
+    setTimeout(() => cartCount.classList.remove("animate-bounce"), 500);
+  });
+});
+
+// Initial render
+renderCart();

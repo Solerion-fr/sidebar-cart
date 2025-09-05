@@ -1,16 +1,26 @@
-# Responsive Sidebar with Overlay (Vanilla JS + Tailwind)
+## 📸 Demo
 
-A simple responsive sidebar component built with **Tailwind CSS** and **vanilla JavaScript**.  
-Includes an overlay that blocks interaction with the background and closes on click.
+![Sidebar Cart Demo](demo.gif)
+
+# 🛒 Sidebar Cart (Vanilla JS + Tailwind)
+
+A simple **sidebar shopping cart** built with Tailwind CSS and vanilla JavaScript.  
+Includes quantity management, total calculation, and persistent storage with `localStorage`.
+
+---
 
 ## ✨ Features
-- Slide-in sidebar from the right
-- Overlay with fade-in/out
-- Closes with button or overlay click
+- Slide-in cart sidebar with overlay
+- Product cards with “Add to Cart” button
+- Quantity management with input field
+- Dynamic total and badge update
+- Persistent cart with `localStorage`
 - Lightweight (no dependencies)
+
+---
 
 ## 🚀 Quick Start
 ```bash
-git clone https://github.com/Solerion-fr/sidebar-overlay.git
-cd sidebar-overlay
+git clone https://github.com/Solerion-fr/sidebar-cart.git
+cd sidebar-cart
 open index.html
