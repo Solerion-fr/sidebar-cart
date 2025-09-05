@@ -1,3 +1,12 @@
+/**
+ * Sidebar Cart System
+ * -------------------
+ * - Manages cart items in localStorage (persist across refresh).
+ * - Handles sidebar open/close with overlay.
+ * - Adds products to the cart, updates quantities, and recalculates totals.
+ * - Updates badge counter with animation.
+ */
+
 const openBtn = document.getElementById("open-sidebar");
 const closeBtn = document.getElementById("close-sidebar");
 const sidebar = document.getElementById("sidebar");
@@ -9,7 +18,9 @@ const cartCount = document.getElementById("cart-count");
 // Load cart from localStorage or start empty
 let cart = JSON.parse(localStorage.getItem("cart")) || [];
 
-// Sidebar open/close
+/* ===========================
+   Sidebar open/close handlers
+   =========================== */
 function openSidebar() {
   sidebar.classList.remove("translate-x-full");
   overlay.classList.remove("hidden");
@@ -36,7 +47,11 @@ openBtn.addEventListener("click", openSidebar);
 closeBtn.addEventListener("click", closeSidebar);
 overlay.addEventListener("click", closeSidebar);
 
-// Simulate fetch to add item
+/* ===========================
+   Cart manipulation functions
+   =========================== */
+
+// Simulate async fetch request when adding to cart
 function addToCart(name, price) {
   return new Promise((resolve) => {
     setTimeout(() => {
@@ -48,20 +63,20 @@ function addToCart(name, price) {
       }
       saveCart();
       resolve();
-    }, 150); // simulate network delay
+    }, 150);
   });
 }
 
-// Save cart to localStorage
+// Save cart state in localStorage
 function saveCart() {
   localStorage.setItem("cart", JSON.stringify(cart));
 }
 
-// Update quantities directly
+// Update quantity directly (from input field)
 function updateQuantity(index, value) {
   const qty = parseInt(value, 10);
   if (isNaN(qty) || qty <= 0) {
-    cart.splice(index, 1);
+    cart.splice(index, 1); // Remove if invalid or 0
   } else {
     cart[index].quantity = qty;
   }
@@ -69,7 +84,9 @@ function updateQuantity(index, value) {
   renderCart();
 }
 
-// Render cart items
+/* ===========================
+   Rendering functions
+   =========================== */
 function renderCart() {
   cartItemsContainer.innerHTML = "";
 
@@ -92,16 +109,16 @@ function renderCart() {
     cartItemsContainer.appendChild(div);
   });
 
-  // Update total
+  // Update total price
   const total = cart.reduce((sum, item) => sum + item.price * item.quantity, 0);
   cartTotal.textContent = `${total.toFixed(2)}€`;
 
-  // Update count badge
+  // Update badge with total quantity
   const totalItems = cart.reduce((sum, item) => sum + item.quantity, 0);
   cartCount.textContent = totalItems;
   cartCount.classList.toggle("hidden", totalItems === 0);
 
-  // Input listeners
+  // Add listeners to quantity inputs
   document.querySelectorAll("input[data-index]").forEach((input) => {
     input.addEventListener("change", () => {
       const index = parseInt(input.dataset.index, 10);
@@ -110,7 +127,9 @@ function renderCart() {
   });
 }
 
-// Add-to-cart buttons
+/* ===========================
+   Add-to-cart buttons
+   =========================== */
 document.querySelectorAll(".add-to-cart").forEach((btn) => {
   btn.addEventListener("click", async () => {
     const name = btn.dataset.name;
@@ -119,11 +138,11 @@ document.querySelectorAll(".add-to-cart").forEach((btn) => {
     await addToCart(name, price);
     renderCart();
 
-    // Animate badge
+    // Animate badge when item is added
     cartCount.classList.add("animate-bounce");
     setTimeout(() => cartCount.classList.remove("animate-bounce"), 500);
   });
 });
 
-// Initial render
+// Initial render when page loads
 renderCart();
